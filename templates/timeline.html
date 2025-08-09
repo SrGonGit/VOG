@@ -1,1 +1,18 @@
-
+{% extends 'base.html' %}
+{% block title %}Timeline · Nosso Site{% endblock %}
+{% block content %}
+<h1>Timeline</h1>
+<ul class="timeline">
+  {% for it in items %}
+    <li>
+      <div class="t-date">{{ it.date }}</div>
+      <div class="t-body">
+        <strong>{{ it.title }}</strong>
+        <p>{{ it.desc }}</p>
+      </div>
+    </li>
+  {% else %}
+    <p>Sem eventos ainda — adicione em <code>config.py</code> (lista TIMELINE).</p>
+  {% endfor %}
+</ul>
+{% endblock %}
