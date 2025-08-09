@@ -1,5 +1,19 @@
 function pad(n){ return n.toString().padStart(2,'0'); }
 
+// --- Tema: aplica a preferência salva ou a do sistema antes de pintar a UI ---
+(function() {
+  try {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldDark = saved ? saved === 'dark' : prefersDark;
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.toggle('dark-theme', shouldDark);
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = shouldDark ? '🌞' : '🌙';
+    });
+  } catch(e) {}
+})();
+
 function tickCounter(el){
   const startIso = el.getAttribute('data-start');
   const start = new Date(startIso);
