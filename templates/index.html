@@ -18,8 +18,12 @@
         <div class="t-body">
           <strong>{{ it.title }}</strong>
           <p>{{ it.desc }}</p>
-          {% if it.image %}
-            <img class="t-img" src="{{ url_for('static', filename=it.image) }}" alt="{{ it.title }}">
+          {% if it.images %}
+            <div class="t-img-group">
+              {% for img in it.images %}
+                <img class="t-img" src="{{ url_for('static', filename=img) }}" alt="{{ it.title }}">
+              {% endfor %}
+            </div>
           {% endif %}
         </div>
       </li>
