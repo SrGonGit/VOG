@@ -39,9 +39,13 @@ body {
   align-items: center;
 }
 
-.nav a:link,
-.nav a:visited {
+.nav a:link {
   color: var(--fg);
+  text-decoration: none;
+}
+
+.nav a:visited {
+  color: var(--fg); /* Força a cor mesmo depois de clicado */
   text-decoration: none;
 }
 
