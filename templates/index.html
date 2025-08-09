@@ -1,14 +1,54 @@
 {% extends 'base.html' %}
-{% block title %}Início · Nosso Site{% endblock %}
+{% block title %}Nosso Site{% endblock %}
 {% block content %}
-<section class="hero">
-  <h1>Tempo de namoro</h1>
+
+<section id="sobre" class="hero">
+  <h1>Sobre nós</h1>
   <p class="counter" id="counter" data-start="{{ start_iso }}"></p>
   <p class="since">(~ {{ start_iso|since }} até agora)</p>
+  <p>Coloque aqui nossa história, links, músicas, referências, etc.</p>
 </section>
 
-<section>
-  <h2>Sobre nós</h2>
-  <p>Pequeno texto contando a nossa lore, links, músicas e referências do casal.</p>
+<section id="timeline">
+  <h2>Timeline</h2>
+  <ul class="timeline">
+    {% for it in timeline %}
+      <li>
+        <div class="t-date">{{ it.date }}</div>
+        <div class="t-body">
+          <strong>{{ it.title }}</strong>
+          <p>{{ it.desc }}</p>
+          {% if it.image %}
+            <img class="t-img" src="{{ url_for('static', filename=it.image) }}" alt="{{ it.title }}">
+          {% endif %}
+        </div>
+      </li>
+    {% else %}
+      <p>Sem eventos ainda — adicione em <code>Config.TIMELINE</code>.</p>
+    {% endfor %}
+  </ul>
 </section>
+
+<section id="galeria">
+  <h2>Galeria</h2>
+  <div class="grid">
+    {% for it in gallery %}
+      {% if it.kind == 'image' %}
+        <a class="card" href="{{ it.src }}" target="_blank" rel="noopener">
+          <img src="{{ it.src }}" alt="foto" loading="lazy">
+        </a>
+      {% elif it.kind == 'video' %}
+        <div class="card">
+          <video controls preload="metadata" {% if it.poster %}poster="{{ it.poster }}"{% endif %}>
+            <source src="{{ it.src }}">
+            Seu navegador não suporta vídeo HTML5.
+          </video>
+        </div>
+      {% endif %}
+    {% else %}
+      <p>Sem mídias na galeria. Adicione arquivos em <code>static/uploads/</code>.</p>
+    {% endfor %}
+  </div>
+</section>
+
 {% endblock %}
