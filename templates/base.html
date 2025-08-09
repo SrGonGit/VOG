@@ -9,28 +9,18 @@
 <body>
   <header class="container">
     <nav class="nav">
-      <a href="{{ url_for('index') }}">Início</a>
-      <a href="{{ url_for('galeria') }}">Galeria</a>
-      <a href="{{ url_for('timeline') }}">Timeline</a>
+      <a href="#sobre">Sobre nós</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#galeria">Galeria</a>
     </nav>
   </header>
 
   <main class="container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul class="flash">
-          {% for category, message in messages %}
-            <li class="flash-{{ category }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-
     {% block content %}{% endblock %}
   </main>
 
   <footer class="container footer">
-    <small>Feito com ❤️ em Flask</small>
+    <small>Feito com ❤️</small>
   </footer>
 
   <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
