@@ -36,11 +36,14 @@ body {
 .nav { display:flex; gap:1rem; align-items:center; }
 .nav a {
   text-decoration:none;
-  color: var(--fg);
+  color: inherit;
   padding:.5rem .75rem;
   border-radius:.75rem;
 }
-.nav a:hover { background: var(--hover-bg); }
+.nav a:hover {
+  color: var(--brand);
+  background: none;
+}
 
 /* Hero */
 .hero { padding: 2rem 0; text-align:center; }
