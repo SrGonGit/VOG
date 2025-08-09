@@ -1,1 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Início · Nosso Site{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Tempo de namoro</h1>
+  <p class="counter" id="counter" data-start="{{ start_iso }}"></p>
+  <p class="since">(~ {{ start_iso|since }} até agora)</p>
+</section>
 
+<section>
+  <h2>Sobre nós</h2>
+  <p>Pequeno texto contando a nossa lore, links, músicas e referências do casal.</p>
+</section>
+{% endblock %}
