@@ -72,7 +72,7 @@ def since(start_iso):
 
 @app.route('/')
 def index():
-    start_dt = app.config['parse_start_date']()
+    start_dt = Config.parse_start_date()
     timeline = sorted(app.config['TIMELINE'], key=lambda i: i['date'], reverse=True)
     gallery = build_gallery_items()
     return render_template('index.html', start_iso=start_dt.isoformat(), timeline=timeline, gallery=gallery)
