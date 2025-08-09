@@ -47,7 +47,7 @@ def _video_thumb(src_path, thumb_path):
         # scale para largura máx 1280 mantendo proporção; -2 garante altura par
         cmd = [
             "ffmpeg", "-y", "-ss", "00:00:01", "-i", src_path,
-            "-vframes", "1", "-vf", "scale=1280:-2", thumb_path
+            "-vframes", "1", thumb_path
         ]
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return True
