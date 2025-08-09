@@ -37,8 +37,6 @@ body {
 .nav a {
   text-decoration:none;
   color: inherit;
-  padding:.5rem .75rem;
-  border-radius:.75rem;
 }
 .nav a:hover {
   color: var(--brand);
