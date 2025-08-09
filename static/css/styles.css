@@ -11,7 +11,8 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
 .since { color:var(--muted); }
 .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: .75rem; margin-top:1rem; }
 .card { display:block; border:1px solid #eee; border-radius:1rem; overflow:hidden; }
-.card img { width:100%; height:auto; display:block; }
+.card img, .t-img { width:100%; height:auto; display:block; }
+.card video { width:100%; height:auto; display:block; }
 .upload-form { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; margin:.5rem 0 1rem; }
 .flash { list-style:none; padding:0; }
 .flash li { padding:.5rem .75rem; border-radius:.5rem; margin:.25rem 0; }
@@ -19,8 +20,11 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
 .flash-error { background:#ffecec; color:#a60018; }
 .footer { color:var(--muted); text-align:center; margin-top:2rem; }
 .timeline { list-style:none; padding-left:0; }
-.timeline li { display:grid; grid-template-columns: 120px 1fr; gap:1rem; padding: .75rem 0; border-bottom:1px dashed #eaeaea; }
+/* Timeline com imagem opcional */
+.timeline { list-style:none; padding-left:0; }
+.timeline li { display:grid; grid-template-columns: 120px 1fr; gap:1rem; padding:.75rem 0; border-bottom:1px dashed #eaeaea; }
 .t-date { color:var(--muted); }
+.t-img { margin-top:.5rem; border-radius:.75rem; }
 .video-thumb { position: relative; display:block; }
 .video-thumb img, .video-thumb .no-thumb {
   width:100%;
