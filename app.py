@@ -117,22 +117,43 @@ def galeria():
             flash(str(e), 'error')
             return redirect(url_for('galeria'))
 
-    # monta a lista de itens (imagens e vídeos)
+    # monta a lista de itens (imagens e vídeos) sem duplicar thumbs de vídeo
     items = []
-    for f in os.listdir(app.config['UPLOAD_FOLDER']):
-        if allowed_file(f):
-            item = {"file": f}
-            if is_image(f):
-                item.update({"kind": "image", "thumb": f})
-            elif is_video(f):
-                base, _ = os.path.splitext(f)
-                thumb_candidate = base + ".jpg"
-                item.update({"kind": "video", "thumb": thumb_candidate if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], thumb_candidate)) else None})
-            items.append(item)
-    # ordena por nome desc (timestamp embutido no nome)
-    items.sort(key=lambda x: x['file'], reverse=True)
-    return render_template('galeria.html', items=items)
+    upload_dir = app.config['UPLOAD_FOLDER']
+    all_files = os.listdir(upload_dir)
 
+    # 1) mapeia thumbs geradas para cada vídeo (ex: video_123.mp4 -> video_123.jpg)
+    thumbs_for_videos = set()
+    for f in all_files:
+        if is_video(f):
+            base, _ = os.path.splitext(f)
+            thumb_candidate = base + ".jpg"
+            if os.path.exists(os.path.join(upload_dir, thumb_candidate)):
+                thumbs_for_videos.add(thumb_candidate)
+
+    # 2) monta a lista, pulando thumbs de vídeo
+    for f in all_files:
+        if not allowed_file(f):
+            continue
+
+        if is_image(f):
+            # se essa imagem é thumb de algum vídeo, pula pra não duplicar
+            if f in thumbs_for_videos:
+                continue
+            items.append({"file": f, "kind": "image", "thumb": f})
+
+        elif is_video(f):
+            base, _ = os.path.splitext(f)
+            thumb = base + ".jpg"
+            items.append({
+                "file": f,
+                "kind": "video",
+                "thumb": thumb if os.path.exists(os.path.join(upload_dir, thumb)) else None
+            })
+
+    # 3) ordena por nome desc (timestamp embutido no nome)
+    items.sort(key=lambda x: x["file"], reverse=True)
+    return render_template('galeria.html', items=items)
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
