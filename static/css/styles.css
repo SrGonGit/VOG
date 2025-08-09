@@ -33,12 +33,20 @@ body {
 .container { max-width: 920px; margin: 0 auto; padding: 1rem; }
 
 /* Navegação */
-.nav { display:flex; gap:1rem; align-items:center; }
-.nav a {
-  text-decoration:none;
-  color: inherit;
+.nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
-.nav a:hover {
+
+.nav a:link,
+.nav a:visited {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.nav a:hover,
+.nav a:active {
   color: var(--brand);
   background: none;
 }
