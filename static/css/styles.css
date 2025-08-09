@@ -109,3 +109,13 @@ body {
   border-radius:.5rem;
   font-weight:700;
 }
+
+.btn-ghost {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  padding: .4rem .6rem;
+  border-radius: .6rem;
+  cursor: pointer;
+}
+.btn-ghost:hover { background: var(--hover-bg); }
