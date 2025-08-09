@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}Nosso Site{% endblock %}
+{% block title %}Gustavo e Veronica{% endblock %}
 {% block content %}
 
 <section id="sobre" class="hero">
-  <h1>Sobre nós</h1>
+  <h1>Gustavo e Veronica</h1>
   <p class="counter" id="counter" data-start="{{ start_iso }}"></p>
-  <p class="since">(~ {{ start_iso|since }} até agora)</p>
-  <p>Coloque aqui nossa história, links, músicas, referências, etc.</p>
+  <p class="since">({{ start_iso|since }} até agora)</p>
+  <p>Texto bonitinho de introdução para fazer mais tarde.</p>
 </section>
 
 <section id="timeline">
-  <h2>Timeline</h2>
+  <h2>Nossa linha do tempo:</h2>
   <ul class="timeline">
     {% for it in timeline %}
       <li>
@@ -34,7 +34,7 @@
 </section>
 
 <section id="galeria">
-  <h2>Galeria</h2>
+  <h2>Nossa galeria</h2>
   <div class="grid">
     {% for it in gallery %}
       {% if it.kind == 'image' %}
