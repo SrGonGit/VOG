@@ -11,7 +11,7 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
 .since { color:var(--muted); }
 .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: .75rem; margin-top:1rem; }
 .card { display:block; border:1px solid #eee; border-radius:1rem; overflow:hidden; }
-.card img { width:100%; height:180px; object-fit:cover; display:block; }
+.card img { width:100%; height:auto; display:block; }
 .upload-form { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; margin:.5rem 0 1rem; }
 .flash { list-style:none; padding:0; }
 .flash li { padding:.5rem .75rem; border-radius:.5rem; margin:.25rem 0; }
@@ -22,5 +22,19 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
 .timeline li { display:grid; grid-template-columns: 120px 1fr; gap:1rem; padding: .75rem 0; border-bottom:1px dashed #eaeaea; }
 .t-date { color:var(--muted); }
 .video-thumb { position: relative; display:block; }
-.video-thumb img, .video-thumb .no-thumb { width:100%; height:180px; object-fit:cover; display:block; background:#111; color:#fff; display:flex; align-items:center; justify-content:center; }
-.video-thumb .badge { position:absolute; right:.5rem; bottom:.5rem; background:rgba(0,0,0,.6); color:#fff; padding:.2rem .45rem; border-radius:.5rem; font-weight:700; }
+.video-thumb img, .video-thumb .no-thumb {
+  width:100%;
+  height:auto;            
+  display:block;
+  background:#111;        
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.video-thumb .badge {
+  position:absolute; right:.5rem; bottom:.5rem;
+  background:rgba(0,0,0,.6); color:#fff;
+  padding:.2rem .45rem; border-radius:.5rem; font-weight:700;
+}
