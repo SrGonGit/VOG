@@ -38,6 +38,18 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
   flex-direction: column;
   align-items: flex-start; /* ou center pra centralizar */
 }
+.t-img-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
+.t-img-group .t-img {
+  max-width: 200px;  /* controla o tamanho de cada foto */
+  height: auto;
+  border-radius: .75rem;
+}
 .video-thumb { position: relative; display:block; }
 .video-thumb img, .video-thumb .no-thumb {
   width:100%;
