@@ -23,7 +23,11 @@ class Config:
             "date": "2022-06-15",
             "title": "Primeiro encontro",
             "desc": "Café que virou história.",
-            "image": "uploads/teste.jpg"
+            "images": [
+                "uploads/teste.jpg",
+                "uploads/teste2.jpg",
+                "uploads/teste3.jpg"
+            ]
         },
         {
             "date": "2022-08-10",
