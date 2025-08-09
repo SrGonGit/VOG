@@ -24,7 +24,20 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
 .timeline { list-style:none; padding-left:0; }
 .timeline li { display:grid; grid-template-columns: 120px 1fr; gap:1rem; padding:.75rem 0; border-bottom:1px dashed #eaeaea; }
 .t-date { color:var(--muted); }
-.t-img { margin-top:.5rem; border-radius:.75rem; }
+.t-img {
+  margin-top: .5rem;
+  border-radius: .75rem;
+  max-width: 400px;   /* largura máxima da imagem */
+  height: auto;       /* mantém proporção */
+  width: 100%;        /* ocupa no máximo o tamanho do container ou max-width */
+  display: block;
+  align-self: center;
+}
+.t-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ou center pra centralizar */
+}
 .video-thumb { position: relative; display:block; }
 .video-thumb img, .video-thumb .no-thumb {
   width:100%;
