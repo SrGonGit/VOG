@@ -1,24 +1,38 @@
 import os
 from datetime import datetime
 
+BASE_DIR = os.path.dirname(__file__)
+
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "troque-esta-chave")
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
-    MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB
-    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "mp4", "mov", "webm"}
+    SECRET_KEY = os.getenv("SECRET_KEY", "senha123")
+
+    # Data do início do namoro
+    START_DATE = os.getenv("START_DATE", "2022-04-16T20:00:00")
+
+    # Pastas/Extensões
+    STATIC_DIR = os.path.join(BASE_DIR, 'static')
+    UPLOAD_FOLDER = os.path.join(STATIC_DIR, 'uploads')  # agora só leitura, controlado via Git
+
     IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
     VIDEO_EXTENSIONS = {"mp4", "mov", "webm"}
 
-    # Data do início do namoro (AAAA-MM-DDTHH:MM:SS) em UTC ou local
-    START_DATE = os.getenv("START_DATE", "2022-06-15T20:00:00")
-
-    # Timeline inicial (pode puxar do DB depois)
+    # Conteúdo da Timeline (exemplo)
+    # Campo opcional 'image': caminho relativo a static/, ex.: 'uploads/primeiro_encontro.jpg'
     TIMELINE = [
-        {"date": "2022-06-15", "title": "Primeiro encontro", "desc": "Café que virou história."},
-        {"date": "2022-08-10", "title": "Viagem X", "desc": "Nossa primeira trip."},
+        {
+            "date": "2022-06-15",
+            "title": "Primeiro encontro",
+            "desc": "Café que virou história.",
+            "image": "uploads/primeiro_encontro.jpg"
+        },
+        {
+            "date": "2022-08-10",
+            "title": "Viagem X",
+            "desc": "Nossa primeira trip.",
+            # sem imagem neste
+        },
     ]
 
     @staticmethod
     def parse_start_date():
-        # Tenta parse flexível
         return datetime.fromisoformat(Config.START_DATE)
