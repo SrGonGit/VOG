@@ -1,1 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Galeria · Nosso Site{% endblock %}
+{% block content %}
+<h1>Galeria</h1>
+<form method="post" enctype="multipart/form-data" class="upload-form">
+  <input type="file" name="foto" accept="image/*" required>
+  <button type="submit">Enviar foto</button>
+  <small>Tipos: png, jpg, jpeg, gif, webp (máx 10MB)</small>
+</form>
 
+<div class="grid">
+  {% for f in files %}
+    <a class="card" href="{{ url_for('uploaded_file', filename=f) }}" target="_blank" rel="noopener">
+      <img src="{{ url_for('uploaded_file', filename=f) }}" alt="foto" loading="lazy">
+    </a>
+  {% else %}
+    <p>Nenhuma foto ainda. Bora subir a primeira?</p>
+  {% endfor %}
+</div>
+{% endblock %}
