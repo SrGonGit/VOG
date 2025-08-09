@@ -5,7 +5,9 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "troque-esta-chave")
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB
-    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "mp4", "mov", "webm"}
+    IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+    VIDEO_EXTENSIONS = {"mp4", "mov", "webm"}
 
     # Data do início do namoro (AAAA-MM-DDTHH:MM:SS) em UTC ou local
     START_DATE = os.getenv("START_DATE", "2022-06-15T20:00:00")
