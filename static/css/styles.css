@@ -27,7 +27,7 @@ body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu
 .t-img {
   margin-top: .5rem;
   border-radius: .75rem;
-  max-width: 400px;   /* largura máxima da imagem */
+  max-width: 200px;   /* largura máxima da imagem */
   height: auto;       /* mantém proporção */
   width: 100%;        /* ocupa no máximo o tamanho do container ou max-width */
   display: block;
