@@ -3,18 +3,31 @@
 {% block content %}
 <h1>Galeria</h1>
 <form method="post" enctype="multipart/form-data" class="upload-form">
-  <input type="file" name="foto" accept="image/*" required>
-  <button type="submit">Enviar foto</button>
-  <small>Tipos: png, jpg, jpeg, gif, webp (máx 10MB)</small>
+  <input type="file" name="foto" accept="image/*,video/*" required>
+  <button type="submit">Enviar</button>
+  <small>Tipos: png, jpg, jpeg, gif, webp, mp4, mov, webm (máx 10MB)</small>
 </form>
 
 <div class="grid">
-  {% for f in files %}
-    <a class="card" href="{{ url_for('uploaded_file', filename=f) }}" target="_blank" rel="noopener">
-      <img src="{{ url_for('uploaded_file', filename=f) }}" alt="foto" loading="lazy">
-    </a>
+  {% for it in items %}
+    {% if it.kind == 'image' %}
+      <a class="card" href="{{ url_for('uploaded_file', filename=it.file) }}" target="_blank" rel="noopener">
+        <img src="{{ url_for('uploaded_file', filename=it.thumb) }}" alt="foto" loading="lazy">
+      </a>
+    {% elif it.kind == 'video' %}
+      <a class="card" href="{{ url_for('uploaded_file', filename=it.file) }}" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          {% if it.thumb %}
+            <img src="{{ url_for('uploaded_file', filename=it.thumb) }}" alt="thumb do vídeo" loading="lazy">
+          {% else %}
+            <div class="no-thumb">Vídeo</div>
+          {% endif %}
+          <span class="badge">▶</span>
+        </div>
+      </a>
+    {% endif %}
   {% else %}
-    <p>Nenhuma foto ainda. Bora subir a primeira?</p>
+    <p>Nenhum arquivo ainda. Bora subir o primeiro?</p>
   {% endfor %}
 </div>
 {% endblock %}
