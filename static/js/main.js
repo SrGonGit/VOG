@@ -35,3 +35,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const el = document.getElementById('counter');
   if (el) tickCounter(el);
 });
+
+// Botão de toggle de tema
+(function(){
+  function setTheme(dark){
+    document.body.classList.toggle('dark-theme', dark);
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e) {}
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = dark ? '🌞' : '🌙';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const dark = !document.body.classList.contains('dark-theme');
+      setTheme(dark);
+    });
+  });
+})();
