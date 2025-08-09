@@ -1,9 +1,6 @@
 import os
-import subprocess
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
-from werkzeug.utils import secure_filename
-from PIL import Image
+from flask import Flask, render_template, url_for
 from config import Config
 
 app = Flask(__name__)
@@ -17,73 +14,48 @@ def is_image(filename):
 def is_video(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in app.config['VIDEO_EXTENSIONS']
 
-def allowed_file(filename):
-    return is_image(filename) or is_video(filename)
 
-def ensure_dirs():
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+def build_gallery_items():
+    """Lê static/uploads e cria lista de mídias (imagens/vídeos) para a galeria.
+    Regra opcional: se existir par `video.ext` e `video.jpg`, usamos `video.jpg` como poster e **não** listamos o JPG sozinho.
+    """
+    upload_dir = app.config['UPLOAD_FOLDER']
+    if not os.path.isdir(upload_dir):
+        return []
 
+    files = os.listdir(upload_dir)
 
-def _unique_name(filename):
-    name, ext = os.path.splitext(secure_filename(filename))
-    ts = datetime.now().strftime("%Y%m%d%H%M%S%f")
-    return f"{name}_{ts}{ext.lower()}"
+    # mapear possíveis posters
+    posters_for_videos = set()
+    for f in files:
+        if is_video(f):
+            base, _ = os.path.splitext(f)
+            cand = base + ".jpg"
+            if cand in files:
+                posters_for_videos.add(cand)
 
+    items = []
+    for f in files:
+        if is_image(f):
+            # se for poster de um vídeo, não listar como imagem independente
+            if f in posters_for_videos:
+                continue
+            items.append({
+                "kind": "image",
+                "src": url_for('static', filename=f"uploads/{f}")
+            })
+        elif is_video(f):
+            base, _ = os.path.splitext(f)
+            poster = base + ".jpg" if base + ".jpg" in files else None
+            items.append({
+                "kind": "video",
+                "src": url_for('static', filename=f"uploads/{f}"),
+                "poster": url_for('static', filename=f"uploads/{poster}") if poster else None
+            })
 
-def _save_image(path):
-    """Compress/resize imagem para ~1280px do maior lado"""
-    try:
-        with Image.open(path) as im:
-            im = im.convert("RGB") if im.mode in ("RGBA", "P") else im
-            im.thumbnail((1280, 1280))
-            im.save(path, optimize=True, quality=85)
-    except Exception as e:
-        app.logger.warning(f"Falha ao processar imagem: {e}")
-
-
-def _video_thumb(src_path, thumb_path):
-    """Gera thumbnail JPG do vídeo usando ffmpeg (frame em 1s)."""
-    try:
-        # scale para largura máx 1280 mantendo proporção; -2 garante altura par
-        cmd = [
-            "ffmpeg", "-y", "-ss", "00:00:01", "-i", src_path,
-            "-vframes", "1", thumb_path
-        ]
-        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return True
-    except Exception as e:
-        app.logger.warning(f"Falha ao gerar thumbnail de vídeo: {e}")
-        return False
-
-
-def save_upload(file_storage):
-    """Salva arquivo (imagem ou vídeo). Retorna dict com metadados."""
-    ensure_dirs()
-    if not file_storage or file_storage.filename == '':
-        raise ValueError("Nenhum arquivo selecionado.")
-
-    if not allowed_file(file_storage.filename):
-        raise ValueError("Extensão não permitida.")
-
-    filename = _unique_name(file_storage.filename)
-    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file_storage.save(path)
-
-    meta = {"file": os.path.basename(path)}
-
-    if is_image(filename):
-        _save_image(path)
-        meta.update({"kind": "image", "thumb": os.path.basename(path)})
-    elif is_video(filename):
-        # gera thumbnail JPG ao lado do arquivo de vídeo
-        base, _ = os.path.splitext(path)
-        thumb_path = base + ".jpg"
-        if _video_thumb(path, thumb_path):
-            meta.update({"kind": "video", "thumb": os.path.basename(thumb_path)})
-        else:
-            meta.update({"kind": "video", "thumb": None})
-
-    return meta
+    # ordena desc por nome (assumindo timestamp no nome, se você usar esse padrão)
+    items.sort(key=lambda x: x['src'], reverse=True)
+    return items
 
 
 @app.template_filter('since')
@@ -100,71 +72,10 @@ def since(start_iso):
 
 @app.route('/')
 def index():
-    start_dt = app.config['parse_start_date']() if callable(app.config.get('parse_start_date')) else Config.parse_start_date()
-    return render_template('index.html', start_iso=start_dt.isoformat())
-
-
-@app.route('/galeria', methods=['GET', 'POST'])
-def galeria():
-    ensure_dirs()
-    if request.method == 'POST':
-        try:
-            meta = save_upload(request.files.get('foto'))
-            flash('Arquivo enviado com sucesso!', 'ok')
-            return redirect(url_for('galeria'))
-        except Exception as e:
-            app.logger.exception(e)
-            flash(str(e), 'error')
-            return redirect(url_for('galeria'))
-
-    # monta a lista de itens (imagens e vídeos) sem duplicar thumbs de vídeo
-    items = []
-    upload_dir = app.config['UPLOAD_FOLDER']
-    all_files = os.listdir(upload_dir)
-
-    # 1) mapeia thumbs geradas para cada vídeo (ex: video_123.mp4 -> video_123.jpg)
-    thumbs_for_videos = set()
-    for f in all_files:
-        if is_video(f):
-            base, _ = os.path.splitext(f)
-            thumb_candidate = base + ".jpg"
-            if os.path.exists(os.path.join(upload_dir, thumb_candidate)):
-                thumbs_for_videos.add(thumb_candidate)
-
-    # 2) monta a lista, pulando thumbs de vídeo
-    for f in all_files:
-        if not allowed_file(f):
-            continue
-
-        if is_image(f):
-            # se essa imagem é thumb de algum vídeo, pula pra não duplicar
-            if f in thumbs_for_videos:
-                continue
-            items.append({"file": f, "kind": "image", "thumb": f})
-
-        elif is_video(f):
-            base, _ = os.path.splitext(f)
-            thumb = base + ".jpg"
-            items.append({
-                "file": f,
-                "kind": "video",
-                "thumb": thumb if os.path.exists(os.path.join(upload_dir, thumb)) else None
-            })
-
-    # 3) ordena por nome desc (timestamp embutido no nome)
-    items.sort(key=lambda x: x["file"], reverse=True)
-    return render_template('galeria.html', items=items)
-
-@app.route('/uploads/<path:filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-
-@app.route('/timeline')
-def timeline():
-    items = app.config['TIMELINE']
-    items = sorted(items, key=lambda i: i['date'], reverse=True)
-    return render_template('timeline.html', items=items)
+    start_dt = app.config['parse_start_date']()
+    timeline = sorted(app.config['TIMELINE'], key=lambda i: i['date'], reverse=True)
+    gallery = build_gallery_items()
+    return render_template('index.html', start_iso=start_dt.isoformat(), timeline=timeline, gallery=gallery)
 
 
 if __name__ == '__main__':
