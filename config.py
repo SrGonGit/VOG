@@ -6,23 +6,20 @@ BASE_DIR = os.path.dirname(__file__)
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "senha123")
 
-    # Data do início do namoro
+    #Data do início do namoro
     START_DATE = os.getenv("START_DATE", "2022-04-16T20:00:00")
 
-    # Pastas/Extensões
     STATIC_DIR = os.path.join(BASE_DIR, 'static')
-    UPLOAD_FOLDER = os.path.join(STATIC_DIR, 'uploads')  # agora só leitura, controlado via Git
+    UPLOAD_FOLDER = os.path.join(STATIC_DIR, 'uploads')
 
     IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
     VIDEO_EXTENSIONS = {"mp4", "mov", "webm"}
 
-    # Conteúdo da Timeline (exemplo)
-    # Campo opcional 'image': caminho relativo a static/, ex.: 'uploads/primeiro_encontro.jpg'
     TIMELINE = [
         {
-            "date": "2022-06-15",
-            "title": "Primeiro encontro",
-            "desc": "Café que virou história.",
+            "date": "2021-12-15",
+            "title": "Voltamos a nos falar.",
+            "desc": "Nossa, como o décimo terceiro ajuda nos boleto, né? Rs.",
             "images": [
                 "uploads/teste.jpg",
                 "uploads/teste2.jpg",
@@ -30,9 +27,9 @@ class Config:
             ]
         },
         {
-            "date": "2022-08-10",
-            "title": "Viagem X",
-            "desc": "Nossa primeira trip.",
+            "date": "2021-12-15",
+            "title": "Nosso primeiro rolê.",
+            "desc": "Cineminha para ver o filme do Homem Aranha.",
             # sem imagem neste
         },
     ]
